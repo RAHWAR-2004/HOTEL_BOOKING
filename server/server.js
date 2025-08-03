@@ -28,7 +28,7 @@ const clientDist = path.join(__dirname, "../client/dist");
 app.use(express.static(clientDist));
 
 // Fallback for client-side routing — must come after API mounts
-app.get("/*", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(clientDist, "index.html"));
 });
 
