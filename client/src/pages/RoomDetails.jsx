@@ -15,6 +15,9 @@ const RoomDetails = () => {
     const [checkOutDate, setCheckOutDate] = useState("")
     const [guests, setGuests] = useState("")
 
+    const [availabilityChecked, setAvailabilityChecked] = useState(false)
+    const [roomAvailable, setRoomAvailable] = useState(false)
+
     const [showPayment, setShowPayment] = useState(false)
     const [paymentMethod, setPaymentMethod] = useState("")
     const [paymentProcessing, setPaymentProcessing] = useState(false)
@@ -24,6 +27,7 @@ const RoomDetails = () => {
     const [demoExpiry, setDemoExpiry] = useState("")
     const [demoCvv, setDemoCvv] = useState("")
     const [demoUpiId, setDemoUpiId] = useState("")
+
 
     useEffect(() => {
 
@@ -122,6 +126,43 @@ const RoomDetails = () => {
     }
 
 
+    const validateBookingDetails = () => {
+
+        if (!checkInDate || !checkOutDate) {
+
+            alert("Please select Check-In and Check-Out dates.")
+
+            return false
+        }
+
+        if (!guests || Number(guests) < 1) {
+
+            alert("Please enter number of guests.")
+
+            return false
+        }
+
+        const checkIn = new Date(checkInDate)
+        const checkOut = new Date(checkOutDate)
+
+        if (checkOut <= checkIn) {
+
+            alert("Check-Out date must be after Check-In date!")
+
+            return false
+        }
+
+        if (!room) {
+
+            alert("Room information is not available.")
+
+            return false
+        }
+
+        return true
+    }
+
+
     const handleBooking = async (e) => {
 
         e.preventDefault()
@@ -138,12 +179,9 @@ const RoomDetails = () => {
             return
         }
 
-
-        let user
-
         try {
 
-            user = JSON.parse(savedUser)
+            JSON.parse(savedUser)
 
         } catch (error) {
 
@@ -160,48 +198,28 @@ const RoomDetails = () => {
         }
 
 
-        if (!user || !user.id) {
+        /*
+         * STEP 2:
+         * If availability has already been checked,
+         * clicking the button means BOOK NOW.
+         */
+        if (availabilityChecked && roomAvailable) {
 
-            alert("User information not found. Please login again.")
+            generateDemoPaymentDetails()
 
-            navigate("/login")
+            setPaymentMethod("")
 
-            return
-        }
-
-
-        if (!checkInDate || !checkOutDate) {
-
-            alert("Please select Check-In and Check-Out dates.")
-
-            return
-        }
-
-
-        if (!guests || Number(guests) < 1) {
-
-            alert("Please enter number of guests.")
+            setShowPayment(true)
 
             return
         }
 
 
-        const checkIn = new Date(checkInDate)
-        const checkOut = new Date(checkOutDate)
-
-
-        if (checkOut <= checkIn) {
-
-            alert("Check-Out date must be after Check-In date!")
-
-            return
-        }
-
-
-        if (!room) {
-
-            alert("Room information is not available.")
-
+        /*
+         * STEP 1:
+         * Check room availability.
+         */
+        if (!validateBookingDetails()) {
             return
         }
 
@@ -212,28 +230,50 @@ const RoomDetails = () => {
                 `http://localhost:8080/api/bookings/check-availability?roomId=${id}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}`
             )
 
-            if (availabilityResponse.ok) {
+            if (!availabilityResponse.ok) {
 
-                const availabilityData =
-                    await availabilityResponse.json()
+                alert("Unable to check room availability.")
 
-                console.log(
-                    "Availability:",
-                    availabilityData
+                return
+            }
+
+
+            const availabilityData =
+                await availabilityResponse.json()
+
+            console.log(
+                "Availability:",
+                availabilityData
+            )
+
+
+            if (
+                availabilityData.available === false ||
+                availabilityData.isAvailable === false
+            ) {
+
+                setAvailabilityChecked(true)
+                setRoomAvailable(false)
+
+                alert(
+                    "This room is not available for the selected dates."
                 )
 
-                if (
-                    availabilityData.available === false ||
-                    availabilityData.isAvailable === false
-                ) {
-
-                    alert(
-                        "This room is not available for the selected dates."
-                    )
-
-                    return
-                }
+                return
             }
+
+
+            /*
+             * Room is available.
+             * Do NOT open payment here.
+             * Show BOOK NOW first.
+             */
+            setAvailabilityChecked(true)
+            setRoomAvailable(true)
+
+            alert(
+                "Room is available! Click BOOK NOW to continue."
+            )
 
         } catch (error) {
 
@@ -241,14 +281,11 @@ const RoomDetails = () => {
                 "Availability check error:",
                 error
             )
+
+            alert(
+                "Unable to check availability. Backend server se connection check karein."
+            )
         }
-
-
-        generateDemoPaymentDetails()
-
-        setPaymentMethod("")
-
-        setShowPayment(true)
     }
 
 
@@ -389,6 +426,7 @@ const RoomDetails = () => {
                     errorText
                 )
 
+
                 if (response.status === 401) {
 
                     alert(
@@ -444,6 +482,9 @@ const RoomDetails = () => {
             setCheckInDate("")
             setCheckOutDate("")
             setGuests("")
+
+            setAvailabilityChecked(false)
+            setRoomAvailable(false)
 
 
             navigate("/my-bookings")
@@ -633,7 +674,6 @@ const RoomDetails = () => {
 
                 <div className='flex flex-col flex-wrap md:flex-row items-start md:items-center gap-4 md:gap-10 text-gray-500'>
 
-
                     <div className='flex flex-col'>
 
                         <label
@@ -647,9 +687,11 @@ const RoomDetails = () => {
                             type="date"
                             id='CheckInDate'
                             value={checkInDate}
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setCheckInDate(e.target.value)
-                            }
+                                setAvailabilityChecked(false)
+                                setRoomAvailable(false)
+                            }}
                             className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none'
                             required
                         />
@@ -673,9 +715,11 @@ const RoomDetails = () => {
                             type="date"
                             id='CheckOutDate'
                             value={checkOutDate}
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setCheckOutDate(e.target.value)
-                            }
+                                setAvailabilityChecked(false)
+                                setRoomAvailable(false)
+                            }}
                             className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none'
                             required
                         />
@@ -700,9 +744,11 @@ const RoomDetails = () => {
                             id='guests'
                             placeholder='0'
                             value={guests}
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setGuests(e.target.value)
-                            }
+                                setAvailabilityChecked(false)
+                                setRoomAvailable(false)
+                            }}
                             min="1"
                             className='max-w-20 rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none'
                             required
@@ -715,9 +761,18 @@ const RoomDetails = () => {
 
                 <button
                     type='submit'
-                    className='bg-primary hover:bg-primary-dull active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer'
+                    className={`${
+                        availabilityChecked && roomAvailable
+                            ? 'bg-green-600 hover:bg-green-700'
+                            : 'bg-primary hover:bg-primary-dull'
+                    } active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer`}
                 >
-                    Check Availability
+
+                    {availabilityChecked && roomAvailable
+                        ? "Book Now"
+                        : "Check Availability"
+                    }
+
                 </button>
 
             </form>
