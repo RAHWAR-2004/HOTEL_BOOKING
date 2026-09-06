@@ -61,7 +61,7 @@ const MyBookings = () => {
             }
 
             const url =
-                "http://localhost:8080/api/bookings/user/" +
+                "https://hotel-booking-1-3qno.onrender.com/api/bookings/user/" +
                 String(userId);
 
             const response = await fetch(url, {
@@ -139,7 +139,7 @@ const MyBookings = () => {
             }
 
             const url =
-                "http://localhost:8080/api/bookings/" +
+                "https://hotel-booking-1-3qno.onrender.com/api/bookings/" +
                 String(bookingId);
 
             const response = await fetch(url, {
@@ -228,7 +228,7 @@ const MyBookings = () => {
                     <div className="bg-white rounded-2xl shadow-lg p-10 text-center">
 
                         <div className="text-6xl mb-4">
-                            🏨
+                            ðŸ¨
                         </div>
 
                         <h2 className="text-2xl font-semibold text-gray-800 mb-2">
@@ -330,7 +330,7 @@ const MyBookings = () => {
                                                 </h2>
 
                                                 <p className="text-gray-500 mt-1">
-                                                    📍 {location}
+                                                    ðŸ“ {location}
                                                 </p>
                                             </div>
 
@@ -391,7 +391,7 @@ const MyBookings = () => {
                                             </span>
 
                                             <span className="text-2xl font-bold text-blue-600">
-                                                ₹
+                                                â‚¹
                                                 {Number(
                                                     totalPrice
                                                 ).toLocaleString("en-IN")}

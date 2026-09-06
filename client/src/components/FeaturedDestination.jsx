@@ -11,7 +11,7 @@ const FeaturedDestination = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/rooms')
+                const response = await fetch('https://hotel-booking-1-3qno.onrender.com/api/rooms')
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch rooms')

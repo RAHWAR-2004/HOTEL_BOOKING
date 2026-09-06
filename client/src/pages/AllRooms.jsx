@@ -44,7 +44,7 @@ const AllRooms = () => {
     // Fetch rooms from Spring Boot
     useEffect(() => {
 
-        fetch("http://localhost:8080/api/rooms")
+        fetch("https://hotel-booking-1-3qno.onrender.com/api/rooms")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch rooms");
@@ -322,7 +322,7 @@ const AllRooms = () => {
                                 </div>
 
                                 <p className='text-xl font-medium text-gray-700'>
-                                    ₹{room.pricePerNight} /night
+                                    â‚¹{room.pricePerNight} /night
                                 </p>
 
                             </div>

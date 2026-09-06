@@ -61,7 +61,7 @@ const AddRoom = () => {
     try {
       setLoading(true);
 
-      const response = await fetch('http://localhost:8080/api/rooms', {
+      const response = await fetch('https://hotel-booking-1-3qno.onrender.com/api/rooms', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

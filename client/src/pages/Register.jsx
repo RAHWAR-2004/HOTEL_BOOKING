@@ -13,7 +13,7 @@ const Register = () => {
 
         try {
             const response = await fetch(
-                "http://localhost:8080/api/users",
+                "https://hotel-booking-1-3qno.onrender.com/api/users",
                 {
                     method: "POST",
                     headers: {

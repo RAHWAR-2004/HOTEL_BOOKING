@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   useEffect(() => {
 
-    fetch('http://localhost:8080/api/bookings')
+    fetch('https://hotel-booking-1-3qno.onrender.com/api/bookings')
       .then((response) => {
 
         if (!response.ok) {

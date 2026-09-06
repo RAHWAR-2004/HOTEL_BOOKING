@@ -12,7 +12,7 @@ const ListRoom = () => {
       try {
 
         const response = await fetch(
-          'http://localhost:8080/api/rooms'
+          'https://hotel-booking-1-3qno.onrender.com/api/rooms'
         );
 
         if (!response.ok) {
@@ -48,7 +48,7 @@ const ListRoom = () => {
     try {
 
       const response = await fetch(
-        `http://localhost:8080/api/rooms/${room._id}`,
+        `https://hotel-booking-1-3qno.onrender.com/api/rooms/${room._id}`,
         {
           method: 'PUT',
 
@@ -161,7 +161,7 @@ const ListRoom = () => {
 
 
               <td className="py-3 px-4 text-gray-700 border-t border-gray-300">
-                ₹{item.pricePerNight}
+                â‚¹{item.pricePerNight}
               </td>
 
 

@@ -31,7 +31,7 @@ const RoomDetails = () => {
 
     useEffect(() => {
 
-        fetch(`http://localhost:8080/api/rooms/${id}`)
+        fetch(`https://hotel-booking-1-3qno.onrender.com/api/rooms/${id}`)
             .then((response) => {
 
                 if (!response.ok) {
@@ -227,7 +227,7 @@ const RoomDetails = () => {
         try {
 
             const availabilityResponse = await fetch(
-                `http://localhost:8080/api/bookings/check-availability?roomId=${id}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}`
+                `https://hotel-booking-1-3qno.onrender.com/api/bookings/check-availability?roomId=${id}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}`
             )
 
             if (!availabilityResponse.ok) {
@@ -402,7 +402,7 @@ const RoomDetails = () => {
 
 
             const response = await fetch(
-                "http://localhost:8080/api/bookings",
+                "https://hotel-booking-1-3qno.onrender.com/api/bookings",
                 {
                     method: "POST",
 
@@ -471,7 +471,7 @@ const RoomDetails = () => {
 
 
             alert(
-                `Payment Successful!\n\nPayment Method: ${paymentMethod}\nTotal Nights: ${nights}\nTotal Amount: ₹${totalPrice}\n\nBooking Confirmed!`
+                `Payment Successful!\n\nPayment Method: ${paymentMethod}\nTotal Nights: ${nights}\nTotal Amount: â‚¹${totalPrice}\n\nBooking Confirmed!`
             )
 
 
@@ -658,7 +658,7 @@ const RoomDetails = () => {
 
                 <p className='text-2xl font-medium'>
 
-                    ₹{room.pricePerNight}/night
+                    â‚¹{room.pricePerNight}/night
 
                 </p>
 
@@ -884,7 +884,7 @@ const RoomDetails = () => {
                             className='absolute right-4 top-3 text-gray-500 text-2xl hover:text-black'
                             disabled={paymentProcessing}
                         >
-                            ×
+                            Ã—
                         </button>
 
 
@@ -933,7 +933,7 @@ const RoomDetails = () => {
                                 </span>
 
                                 <span>
-                                    ₹{getTotalPrice()}
+                                    â‚¹{getTotalPrice()}
                                 </span>
 
                             </div>
@@ -955,7 +955,7 @@ const RoomDetails = () => {
                                 }`}
                                 disabled={paymentProcessing}
                             >
-                                💳 Card
+                                ðŸ’³ Card
                             </button>
 
 
@@ -969,7 +969,7 @@ const RoomDetails = () => {
                                 }`}
                                 disabled={paymentProcessing}
                             >
-                                📱 UPI
+                                ðŸ“± UPI
                             </button>
 
                         </div>
